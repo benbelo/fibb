@@ -1,0 +1,8 @@
+services:
+  fibb:
+    build: .
+    restart: unless-stopped
+    volumes:
+      - ./data:/app/data
+    ports:
+      - "8000:8000"

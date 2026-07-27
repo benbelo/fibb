@@ -1,0 +1,34 @@
+# Exemple anonymisé. Le fichier réel data/patrimoine.yaml n'est jamais commité (repo public).
+# categorie: comptes, investissements, epargne ou credits
+# etablissement, taux, echeance: optionnels (surtout utiles pour les credits)
+
+- nom: Compte courant
+  categorie: comptes
+  montant: 3200
+
+- nom: Livret A
+  categorie: epargne
+  montant: 22950
+  etablissement: Banque Exemple
+  taux: 3.0
+
+- nom: Assurance-vie
+  categorie: epargne
+  montant: 15000
+  etablissement: Assureur Exemple
+
+- nom: PEA
+  categorie: investissements
+  montant: 18500
+  etablissement: Courtier Exemple
+
+- nom: Crypto
+  categorie: investissements
+  montant: 2100
+
+- nom: Prêt immobilier
+  categorie: credits
+  montant: 145000
+  etablissement: Banque Exemple
+  taux: 3.2
+  echeance: "2045-06"
