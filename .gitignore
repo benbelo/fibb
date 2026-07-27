@@ -1,0 +1,8 @@
+CLAUDE.md
+
+# données financières réelles - ne jamais committer (repo public)
+data/patrimoine.yaml
+
+.venv/
+__pycache__/
+*.pyc
