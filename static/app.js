@@ -1,14 +1,14 @@
 let items = [];
+let brutValue = 0;
 
 const CATEGORY_LABELS = {
-  comptes: "Comptes",
   investissements: "Investissements",
   epargne: "Épargne",
-  credits: "Crédits",
+  emprunts: "Emprunts",
 };
 
-const CATEGORY_ORDER = ["comptes", "investissements", "epargne", "credits"];
-const ASSET_CATEGORIES = ["comptes", "investissements", "epargne"];
+const CATEGORY_ORDER = ["investissements", "epargne", "emprunts"];
+const ASSET_CATEGORIES = ["investissements", "epargne"];
 
 const currency = new Intl.NumberFormat("fr-FR", {
   style: "currency",
@@ -25,16 +25,16 @@ function itemMeta(item) {
 }
 
 function render() {
-  const brut = items
+  const assetTotal = items
     .filter((i) => ASSET_CATEGORIES.includes(i.categorie))
     .reduce((sum, i) => sum + i.montant, 0);
   const financeTotal = items
-    .filter((i) => i.categorie === "credits" && !i.exclu)
+    .filter((i) => i.categorie === "emprunts" && !i.exclu)
     .reduce((sum, i) => sum + (i.finance || 0), 0);
-  const net = brut + financeTotal;
+  const net = assetTotal + financeTotal;
 
   document.getElementById("total-net").textContent = currency.format(net);
-  document.getElementById("total-brut").textContent = currency.format(brut);
+  document.getElementById("total-brut").textContent = currency.format(brutValue);
 
   const container = document.getElementById("categories");
   container.innerHTML = CATEGORY_ORDER.map((cat) => {
@@ -53,7 +53,7 @@ function render() {
           <span class="item-amount">${currency.format(i.montant)}</span>
           <span class="item-actions">
             <button class="edit-btn" data-id="${i.id}" type="button" title="Modifier">✎</button>
-            <button class="delete-btn" data-id="${i.id}" type="button" title="Supprimer">🗑</button>
+            <button class="delete-btn" data-id="${i.id}" type="button" title="Supprimer">✕</button>
           </span>
         </li>`
           )
@@ -72,9 +72,32 @@ function render() {
 }
 
 async function refresh() {
-  items = await fetch("/api/patrimoine").then((res) => res.json());
+  const [itemsData, brutData] = await Promise.all([
+    fetch("/api/patrimoine").then((res) => res.json()),
+    fetch("/api/brut").then((res) => res.json()),
+  ]);
+  items = itemsData;
+  brutValue = brutData.brut;
   render();
 }
+
+document.getElementById("edit-brut").addEventListener("click", async () => {
+  const value = prompt("Patrimoine brut :", brutValue);
+  if (value === null) return;
+  const brut = Number(value);
+  if (Number.isNaN(brut)) return;
+
+  const res = await fetch("/api/brut", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ brut }),
+  });
+  if (!res.ok) {
+    alert("Erreur lors de la mise à jour du patrimoine brut.");
+    return;
+  }
+  await refresh();
+});
 
 // --- Ajout / édition ---
 
@@ -89,7 +112,7 @@ function openDialog(item) {
   editingId = item ? item.id : null;
   dialogTitle.textContent = item ? `Modifier ${item.nom}` : "Ajouter un élément";
   form.nom.value = item ? item.nom : "";
-  form.categorie.value = item ? item.categorie : "comptes";
+  form.categorie.value = item ? item.categorie : "investissements";
   form.montant.value = item ? item.montant : "";
   form.etablissement.value = item && item.etablissement ? item.etablissement : "";
   form.finance.value = item && item.finance != null ? item.finance : "";
@@ -151,6 +174,36 @@ form.addEventListener("submit", async (e) => {
   }
 
   dialog.close();
+  await refresh();
+});
+
+// --- Import / export CSV ---
+
+document.getElementById("export-csv").addEventListener("click", () => {
+  window.location.href = "/api/patrimoine/export";
+});
+
+const importInput = document.getElementById("import-csv-input");
+
+document.getElementById("import-csv").addEventListener("click", () => {
+  importInput.click();
+});
+
+importInput.addEventListener("change", async () => {
+  const file = importInput.files[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const res = await fetch("/api/patrimoine/import", { method: "POST", body: formData });
+  importInput.value = "";
+
+  if (!res.ok) {
+    alert("Erreur lors de l'import du CSV.");
+    return;
+  }
+
   await refresh();
 });
 

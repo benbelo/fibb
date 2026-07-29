@@ -1,33 +1,32 @@
 # Exemple anonymisé. Le fichier réel data/patrimoine.yaml n'est jamais commité (repo public).
-# categorie: comptes, investissements, epargne ou credits
+# brut: patrimoine brut, saisi manuellement (ce n'est pas une somme calculée)
+# categorie: investissements, epargne ou emprunts
 # etablissement: optionnel
-# finance: optionnel, pour les credits uniquement (part deja financee/couverte, ex. par des loyers)
+# finance: optionnel, pour les emprunts uniquement (part deja financee/couverte, ex. par des loyers)
 
-- nom: Compte courant
-  categorie: comptes
-  montant: 3200
+brut: 58550
+items:
+  - nom: Livret A
+    categorie: epargne
+    montant: 22950
+    etablissement: Banque Exemple
 
-- nom: Livret A
-  categorie: epargne
-  montant: 22950
-  etablissement: Banque Exemple
+  - nom: Assurance-vie
+    categorie: epargne
+    montant: 15000
+    etablissement: Assureur Exemple
 
-- nom: Assurance-vie
-  categorie: epargne
-  montant: 15000
-  etablissement: Assureur Exemple
+  - nom: PEA
+    categorie: investissements
+    montant: 18500
+    etablissement: Courtier Exemple
 
-- nom: PEA
-  categorie: investissements
-  montant: 18500
-  etablissement: Courtier Exemple
+  - nom: Crypto
+    categorie: investissements
+    montant: 2100
 
-- nom: Crypto
-  categorie: investissements
-  montant: 2100
-
-- nom: Crédit immobilier locatif
-  categorie: credits
-  montant: 50000
-  etablissement: Banque Exemple
-  finance: 30000
+  - nom: Emprunt immobilier locatif
+    categorie: emprunts
+    montant: 50000
+    etablissement: Banque Exemple
+    finance: 30000
