@@ -52,11 +52,12 @@
       <label>Établissement
         <input name="etablissement" placeholder="optionnel">
       </label>
-      <label>Taux (%)
-        <input name="taux" type="number" step="0.01" placeholder="optionnel">
+      <label>Financé
+        <input name="finance" type="number" step="0.01" placeholder="optionnel, pour les crédits">
       </label>
-      <label>Échéance
-        <input name="echeance" placeholder="optionnel, ex. 2045-06">
+      <label class="checkbox-label">
+        <input name="exclu" type="checkbox">
+        Ne pas apparaître dans le patrimoine
       </label>
 
       <p class="error" id="dialog-error"></p>

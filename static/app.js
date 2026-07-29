@@ -19,8 +19,8 @@ const currency = new Intl.NumberFormat("fr-FR", {
 function itemMeta(item) {
   const parts = [];
   if (item.etablissement) parts.push(item.etablissement);
-  if (item.taux != null) parts.push(`${item.taux}%`);
-  if (item.echeance) parts.push(`échéance ${item.echeance}`);
+  if (item.finance != null) parts.push(`financé ${currency.format(item.finance)}`);
+  if (item.exclu) parts.push("hors patrimoine");
   return parts.join(" · ");
 }
 
@@ -28,10 +28,10 @@ function render() {
   const brut = items
     .filter((i) => ASSET_CATEGORIES.includes(i.categorie))
     .reduce((sum, i) => sum + i.montant, 0);
-  const credits = items
-    .filter((i) => i.categorie === "credits")
-    .reduce((sum, i) => sum + i.montant, 0);
-  const net = brut - credits;
+  const financeTotal = items
+    .filter((i) => i.categorie === "credits" && !i.exclu)
+    .reduce((sum, i) => sum + (i.finance || 0), 0);
+  const net = brut + financeTotal;
 
   document.getElementById("total-net").textContent = currency.format(net);
   document.getElementById("total-brut").textContent = currency.format(brut);
@@ -92,8 +92,8 @@ function openDialog(item) {
   form.categorie.value = item ? item.categorie : "comptes";
   form.montant.value = item ? item.montant : "";
   form.etablissement.value = item && item.etablissement ? item.etablissement : "";
-  form.taux.value = item && item.taux != null ? item.taux : "";
-  form.echeance.value = item && item.echeance ? item.echeance : "";
+  form.finance.value = item && item.finance != null ? item.finance : "";
+  form.exclu.checked = item ? !!item.exclu : false;
   dialog.showModal();
 }
 
@@ -131,8 +131,8 @@ form.addEventListener("submit", async (e) => {
     categorie: form.categorie.value,
     montant: Number(form.montant.value),
     etablissement: form.etablissement.value.trim() || null,
-    taux: form.taux.value.trim() ? Number(form.taux.value) : null,
-    echeance: form.echeance.value.trim() || null,
+    finance: form.finance.value.trim() ? Number(form.finance.value) : null,
+    exclu: form.exclu.checked || null,
   };
 
   const url = editingId != null ? `/api/patrimoine/${editingId}` : "/api/patrimoine";

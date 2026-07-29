@@ -1,6 +1,7 @@
 # Exemple anonymisé. Le fichier réel data/patrimoine.yaml n'est jamais commité (repo public).
 # categorie: comptes, investissements, epargne ou credits
-# etablissement, taux, echeance: optionnels (surtout utiles pour les credits)
+# etablissement: optionnel
+# finance: optionnel, pour les credits uniquement (part deja financee/couverte, ex. par des loyers)
 
 - nom: Compte courant
   categorie: comptes
@@ -10,7 +11,6 @@
   categorie: epargne
   montant: 22950
   etablissement: Banque Exemple
-  taux: 3.0
 
 - nom: Assurance-vie
   categorie: epargne
@@ -26,9 +26,8 @@
   categorie: investissements
   montant: 2100
 
-- nom: Prêt immobilier
+- nom: Crédit immobilier locatif
   categorie: credits
-  montant: 145000
+  montant: 50000
   etablissement: Banque Exemple
-  taux: 3.2
-  echeance: "2045-06"
+  finance: 30000

@@ -37,11 +37,17 @@ Via l'UI (bouton "+ Ajouter" et icônes ✎ / 🗑 sur chaque ligne), ou en modi
   categorie: epargne          # comptes | investissements | epargne | credits
   montant: 22950
   etablissement: Ma Banque    # optionnel
-  taux: 3.0                   # optionnel, en %
-  echeance: "2045-06"         # optionnel
+
+- nom: Crédit immobilier locatif
+  categorie: credits
+  montant: 50000              # reste à rembourser, purement indicatif
+  finance: 30000               # optionnel, part déjà financée/couverte (ex. par des loyers)
+  exclu: true                  # optionnel, exclut ce crédit du patrimoine
 ```
 
-Patrimoine brut = comptes + investissements + épargne. Patrimoine net = brut - crédits.
+Patrimoine brut = comptes + investissements + épargne. Patrimoine net = brut + la somme des
+`finance` de chaque crédit (les crédits cochés `exclu` n'y contribuent pas). Le `montant` d'un
+crédit (reste à rembourser) est purement indicatif : il n'entre dans aucun des deux totaux.
 
 ⚠️ `data/patrimoine.yaml` est gitignored : ne jamais committer de vraies données financières sur
 ce repo public. Utiliser `data/patrimoine.example.yaml` comme modèle.

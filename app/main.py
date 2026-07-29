@@ -12,7 +12,9 @@ STATIC_DIR = Path(__file__).resolve().parent.parent / "static"
 HEADER = (
     "# Patrimoine personnel. Chaque entrée est déclarative : pas de base de données.\n"
     "# categorie: comptes, investissements, epargne ou credits\n"
-    "# etablissement, taux, echeance: optionnels (surtout utiles pour les credits)\n"
+    "# etablissement: optionnel\n"
+    "# finance: optionnel, pour les credits uniquement (part deja financee/couverte)\n"
+    "# exclu: optionnel, pour les credits uniquement (n'apparait pas dans le patrimoine)\n"
 )
 
 
@@ -21,8 +23,8 @@ class Item(BaseModel):
     categorie: Literal["comptes", "investissements", "epargne", "credits"]
     montant: float
     etablissement: str | None = None
-    taux: float | None = None
-    echeance: str | None = None
+    finance: float | None = None
+    exclu: bool | None = None
 
 
 class ItemOut(Item):
