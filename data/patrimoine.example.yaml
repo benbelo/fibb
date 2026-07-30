@@ -1,10 +1,8 @@
 # Exemple anonymisé. Le fichier réel data/patrimoine.yaml n'est jamais commité (repo public).
-# brut: patrimoine brut, saisi manuellement (ce n'est pas une somme calculée)
 # categorie: investissements, epargne ou emprunts
 # etablissement: optionnel
 # finance: optionnel, pour les emprunts uniquement (part deja financee/couverte, ex. par des loyers)
 
-brut: 58550
 items:
   - nom: Livret A
     categorie: epargne

@@ -1,5 +1,4 @@
 let items = [];
-let brutValue = 0;
 
 const CATEGORY_LABELS = {
   investissements: "Investissements",
@@ -34,7 +33,6 @@ function render() {
   const net = assetTotal + financeTotal;
 
   document.getElementById("total-net").textContent = currency.format(net);
-  document.getElementById("total-brut").textContent = currency.format(brutValue);
 
   const container = document.getElementById("categories");
   container.innerHTML = CATEGORY_ORDER.map((cat) => {
@@ -72,32 +70,9 @@ function render() {
 }
 
 async function refresh() {
-  const [itemsData, brutData] = await Promise.all([
-    fetch("/api/patrimoine").then((res) => res.json()),
-    fetch("/api/brut").then((res) => res.json()),
-  ]);
-  items = itemsData;
-  brutValue = brutData.brut;
+  items = await fetch("/api/patrimoine").then((res) => res.json());
   render();
 }
-
-document.getElementById("edit-brut").addEventListener("click", async () => {
-  const value = prompt("Patrimoine brut :", brutValue);
-  if (value === null) return;
-  const brut = Number(value);
-  if (Number.isNaN(brut)) return;
-
-  const res = await fetch("/api/brut", {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ brut }),
-  });
-  if (!res.ok) {
-    alert("Erreur lors de la mise à jour du patrimoine brut.");
-    return;
-  }
-  await refresh();
-});
 
 // --- Ajout / édition ---
 

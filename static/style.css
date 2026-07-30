@@ -92,23 +92,6 @@ main {
   color: var(--text);
 }
 
-.total-brut .total-value {
-  font-size: 1.6rem;
-  color: var(--muted);
-}
-
-.total-brut-row {
-  display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
-}
-
-.edit-inline-btn {
-  padding: 0.1rem 0.4rem;
-  font-size: 0.8rem;
-  line-height: 1;
-}
-
 .categories {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));

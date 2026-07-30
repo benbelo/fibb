@@ -14,7 +14,6 @@ STATIC_DIR = Path(__file__).resolve().parent.parent / "static"
 
 HEADER = (
     "# Patrimoine personnel. Chaque entrée est déclarative : pas de base de données.\n"
-    "# brut: patrimoine brut, saisi manuellement (ce n'est pas une somme calculée)\n"
     "# categorie: investissements, epargne ou emprunts\n"
     "# etablissement: optionnel\n"
     "# finance: optionnel, pour les emprunts uniquement (part deja financee/couverte)\n"
@@ -37,13 +36,9 @@ class ItemOut(Item):
     id: int
 
 
-class Brut(BaseModel):
-    brut: float
-
-
 def read_data() -> dict:
     data = yaml.safe_load(DATA_FILE.read_text()) or {}
-    return {"brut": data.get("brut", 0.0), "items": data.get("items", [])}
+    return {"items": data.get("items", [])}
 
 
 def write_data(data: dict) -> None:
@@ -71,19 +66,6 @@ app = FastAPI(title="fibb")
 @app.get("/api/patrimoine", response_model=list[ItemOut])
 def list_items() -> list[ItemOut]:
     return with_ids(read_items())
-
-
-@app.get("/api/brut", response_model=Brut)
-def get_brut() -> Brut:
-    return Brut(brut=read_data()["brut"])
-
-
-@app.put("/api/brut", response_model=Brut)
-def set_brut(value: Brut) -> Brut:
-    data = read_data()
-    data["brut"] = value.brut
-    write_data(data)
-    return value
 
 
 @app.post("/api/patrimoine", response_model=ItemOut, status_code=201)
